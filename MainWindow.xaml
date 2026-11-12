@@ -1,0 +1,477 @@
+<Window x:Class="DG.Uninstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DG Uninstaller &amp; Cleaner"
+        Width="1280"
+        Height="860"
+        MinWidth="1100"
+        MinHeight="720"
+        WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Assets/DG-Uninstaller.ico"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="20,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Width="42" Height="42" Source="pack://application:,,,/Assets/DG-Uninstaller.ico" />
+                <StackPanel Grid.Column="1" Margin="13,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="DG Uninstaller &amp; Cleaner" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="Deep uninstall, leftover cleanup, and system cleaning"
+                               Style="{DynamicResource MutedText}" Margin="0,3,0,0" />
+                </StackPanel>
+                <Border Grid.Column="2"
+                        Background="#0F2A35"
+                        BorderBrush="{DynamicResource AccentBrush}"
+                        BorderThickness="1"
+                        CornerRadius="20"
+                        Padding="12,5"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="ADMIN" Foreground="{DynamicResource AccentBrush}" FontSize="11" FontWeight="Bold" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <TabControl x:Name="MainTabs" Grid.Row="1">
+            <TabItem Header="Uninstall">
+                <Grid Margin="18">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="190" />
+                            <ColumnDefinition Width="190" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="SearchBox"
+                                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="Search by name, publisher, version, or location" />
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding FilterOptions}"
+                                  SelectedItem="{Binding SelectedFilter}"
+                                  Margin="10,0,0,0" />
+                        <ComboBox Grid.Column="2"
+                                  ItemsSource="{Binding SortOptions}"
+                                  SelectedItem="{Binding SelectedSort}"
+                                  Margin="10,0,0,0" />
+                        <Button Grid.Column="3"
+                                Content="Refresh"
+                                Style="{DynamicResource PrimaryButton}"
+                                Margin="10,0,0,0"
+                                Click="RefreshApps_Click" />
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2.1*" />
+                            <ColumnDefinition Width="14" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{DynamicResource Card}" Padding="0">
+                            <DataGrid x:Name="AppsGrid"
+                                      ItemsSource="{Binding AppsView}"
+                                      SelectedItem="{Binding SelectedApp, Mode=TwoWay}"
+                                      MouseDoubleClick="AppsGrid_MouseDoubleClick">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="38" Header="">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                          HorizontalAlignment="Center" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Application" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Border Width="30"
+                                                            Height="30"
+                                                            CornerRadius="15"
+                                                            Background="{DynamicResource Surface2Brush}"
+                                                            BorderBrush="{DynamicResource BorderBrush}"
+                                                            BorderThickness="1"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Initial}"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center"
+                                                                   FontWeight="Bold"
+                                                                   Foreground="{DynamicResource AccentBrush}" />
+                                                    </Border>
+                                                    <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" />
+                                                        <TextBlock Text="{Binding Subtitle}" Style="{DynamicResource MutedText}" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Type" Binding="{Binding TypeText}" Width="70" />
+                                    <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" Width="80" />
+                                    <DataGridTextColumn Header="Installed" Binding="{Binding InstallDateText}" Width="95" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{DynamicResource Card}" Padding="0">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel Margin="16">
+                                    <TextBlock Text="Selected application" Style="{DynamicResource CaptionText}" />
+                                    <TextBlock Text="{Binding SelectedApp.DisplayName, TargetNullValue=No app selected}"
+                                               FontSize="19"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap"
+                                               Margin="0,5,0,0" />
+                                    <TextBlock Text="{Binding SelectedApp.Publisher, TargetNullValue=Select an application to inspect it}"
+                                               Style="{DynamicResource MutedText}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,3,0,12" />
+
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="90" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Version" Style="{DynamicResource MutedText}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding SelectedApp.Version, TargetNullValue=—}" />
+                                        <TextBlock Grid.Row="1" Text="Type" Style="{DynamicResource MutedText}" Margin="0,6,0,0" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedApp.TypeText, TargetNullValue=—}" Margin="0,6,0,0" />
+                                        <TextBlock Grid.Row="2" Text="Size" Style="{DynamicResource MutedText}" Margin="0,6,0,0" />
+                                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedApp.SizeText, TargetNullValue=—}" Margin="0,6,0,0" />
+                                        <TextBlock Grid.Row="3" Text="Installed" Style="{DynamicResource MutedText}" Margin="0,6,0,0" />
+                                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedApp.InstallDateText, TargetNullValue=—}" Margin="0,6,0,0" />
+                                    </Grid>
+
+                                    <TextBlock Text="Location" Style="{DynamicResource MutedText}" Margin="0,12,0,3" />
+                                    <TextBlock Text="{Binding SelectedApp.InstallLocation, TargetNullValue=—}"
+                                               TextWrapping="Wrap"
+                                               MaxHeight="64"
+                                               FontSize="12" />
+
+                                    <TextBlock Text="Uninstall command" Style="{DynamicResource MutedText}" Margin="0,12,0,3" />
+                                    <TextBlock Text="{Binding SelectedApp.UninstallString, TargetNullValue=No official uninstaller found}"
+                                               TextWrapping="Wrap"
+                                               MaxHeight="58"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource MutedBrush}" />
+
+                                    <Button x:Name="UninstallButton"
+                                            Content="Uninstall selected"
+                                            Style="{DynamicResource PrimaryButton}"
+                                            Margin="0,16,0,0"
+                                            Click="Uninstall_Click" />
+                                    <Button x:Name="PreviewButton"
+                                            Content="Preview leftovers"
+                                            Margin="0,8,0,0"
+                                            Click="PreviewLeftovers_Click" />
+                                    <Button x:Name="OpenLocationButton"
+                                            Content="Open install location"
+                                            Style="{DynamicResource GhostButton}"
+                                            Margin="0,4,0,0"
+                                            Click="OpenLocation_Click" />
+
+                                    <Separator Margin="0,14,0,8" />
+                                    <TextBlock Text="Uninstall options" Style="{DynamicResource CaptionText}" Margin="0,0,0,8" />
+                                    <CheckBox Content="Silent uninstall when supported"
+                                              IsChecked="{Binding Settings.SilentUninstall, Mode=TwoWay}" />
+                                    <CheckBox Content="Create a restore point first"
+                                              IsChecked="{Binding Settings.CreateRestorePoint, Mode=TwoWay}"
+                                              Margin="0,8,0,0" />
+                                    <CheckBox Content="Back up leftovers before cleaning"
+                                              IsChecked="{Binding Settings.BackupLeftovers, Mode=TwoWay}"
+                                              Margin="0,8,0,0" />
+                                    <CheckBox Content="Close running app processes"
+                                              IsChecked="{Binding Settings.CloseRunningApps, Mode=TwoWay}"
+                                              Margin="0,8,0,0" />
+                                    <CheckBox Content="Aggressive leftover scan (services, tasks, COM)"
+                                              IsChecked="{Binding Settings.AggressiveMode, Mode=TwoWay}"
+                                              Margin="0,8,0,0" />
+
+                                    <Border Background="#10202E"
+                                            BorderBrush="{DynamicResource BorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="10"
+                                            Margin="0,14,0,0">
+                                        <TextBlock Text="The official uninstaller runs first. Nothing else is removed until you review the leftover scan and confirm."
+                                                   Style="{DynamicResource MutedText}"
+                                                   TextWrapping="Wrap" />
+                                    </Border>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Cleaner">
+                <Grid Margin="18">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="System Cleaner" Style="{DynamicResource TitleText}" />
+                            <TextBlock Text="Scan common temporary, cache, log, and Windows upgrade locations. Locked files are skipped."
+                                       Style="{DynamicResource MutedText}" Margin="0,4,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <CheckBox x:Name="AggressiveCleanerCheckBox"
+                                      Content="Include aggressive categories"
+                                      IsChecked="{Binding Settings.CleanerAggressiveMode, Mode=TwoWay}"
+                                      Margin="0,0,14,0"
+                                      VerticalAlignment="Center" />
+                            <Button x:Name="ScanCleanerButton"
+                                    Content="Scan"
+                                    Style="{DynamicResource PrimaryButton}"
+                                    Click="ScanCleaner_Click" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{DynamicResource Card}" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="Selected to clean" Style="{DynamicResource CaptionText}" />
+                                <TextBlock x:Name="CleanerSelectedSizeText" Text="0 B" FontSize="20" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{DynamicResource Card}" Padding="14" Margin="10,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Files found" Style="{DynamicResource CaptionText}" />
+                                <TextBlock x:Name="CleanerFileCountText" Text="0" FontSize="20" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Style="{DynamicResource Card}" Padding="14" Margin="10,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Categories" Style="{DynamicResource CaptionText}" />
+                                <TextBlock x:Name="CleanerCategoryCountText" Text="0" FontSize="20" FontWeight="SemiBold" Margin="0,4,0,0" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Border Grid.Row="2" Style="{DynamicResource Card}" Padding="0">
+                        <DataGrid x:Name="CleanerGrid"
+                                  ItemsSource="{Binding Categories}"
+                                  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="38" Header="">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                      HorizontalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Category" Binding="{Binding Name}" Width="220" />
+                                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" />
+                                <DataGridTextColumn Header="Risk" Binding="{Binding RiskText}" Width="95" />
+                                <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" Width="90" />
+                                <DataGridTextColumn Header="Files" Binding="{Binding FileCountText}" Width="80" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+
+                    <Grid Grid.Row="3" Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Select safe" Style="{DynamicResource SmallButton}" Click="SelectSafeCleaner_Click" />
+                        <Button Content="Select all" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="SelectAllCleaner_Click" />
+                        <ProgressBar x:Name="CleanerProgress" Grid.Column="2" Margin="16,0" VerticalAlignment="Center" Value="0" Maximum="100" />
+                        <Button Grid.Column="3"
+                                Content="Clean selected"
+                                Style="{DynamicResource PrimaryButton}"
+                                Click="CleanSelected_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Backups">
+                <Grid Margin="18">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Backups &amp; Restore" Style="{DynamicResource TitleText}" />
+                            <TextBlock Text="Every leftover cleanup can be restored from its manifest. Existing files are preserved."
+                                       Style="{DynamicResource MutedText}" Margin="0,4,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="Open backup folder" Style="{DynamicResource SmallButton}" Click="OpenBackupFolder_Click" />
+                            <Button Content="Refresh" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="RefreshBackups_Click" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="1" Style="{DynamicResource Card}" Padding="0">
+                        <DataGrid x:Name="BackupsGrid"
+                                  ItemsSource="{Binding Backups}"
+                                  SelectedItem="{Binding SelectedBackup, Mode=TwoWay}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Application" Binding="{Binding AppName}" Width="*" />
+                                <DataGridTextColumn Header="Date" Binding="{Binding DateText}" Width="150" />
+                                <DataGridTextColumn Header="Items" Binding="{Binding ItemCount}" Width="80" />
+                                <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" Width="95" />
+                                <DataGridTextColumn Header="Backup folder" Binding="{Binding FolderPath}" Width="2*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+
+                    <Grid Grid.Row="2" Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Restore puts files and registry entries back. If an item already exists, the restored copy gets a .restored_ suffix."
+                                   Style="{DynamicResource MutedText}"
+                                   VerticalAlignment="Center" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="Delete backup" Style="{DynamicResource DangerButton}" Click="DeleteBackup_Click" />
+                            <Button Content="Restore selected" Style="{DynamicResource PrimaryButton}" Margin="10,0,0,0" Click="RestoreBackup_Click" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Settings">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="18" MaxWidth="900" HorizontalAlignment="Left">
+                        <TextBlock Text="Settings" Style="{DynamicResource TitleText}" />
+                        <TextBlock Text="Defaults are safe. Aggressive options are opt-in and clearly labeled."
+                                   Style="{DynamicResource MutedText}" Margin="0,4,0,14" />
+
+                        <Border Style="{DynamicResource Card}" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="Safety and behavior" Style="{DynamicResource CaptionText}" Margin="0,0,0,10" />
+                                <CheckBox Content="Create a restore point before uninstalling"
+                                          IsChecked="{Binding Settings.CreateRestorePoint, Mode=TwoWay}" />
+                                <CheckBox Content="Back up leftover items before cleaning"
+                                          IsChecked="{Binding Settings.BackupLeftovers, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Close running app processes before uninstalling"
+                                          IsChecked="{Binding Settings.CloseRunningApps, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Use silent uninstall when supported"
+                                          IsChecked="{Binding Settings.SilentUninstall, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Show Microsoft applications"
+                                          IsChecked="{Binding Settings.IncludeMicrosoft, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Show system components and updates"
+                                          IsChecked="{Binding Settings.ShowSystemComponents, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Enable aggressive leftover scan by default"
+                                          IsChecked="{Binding Settings.AggressiveMode, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Include aggressive cleaner categories by default"
+                                          IsChecked="{Binding Settings.CleanerAggressiveMode, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Remove provisioned Store packages"
+                                          IsChecked="{Binding Settings.RemoveProvisionedStorePackages, Mode=TwoWay}" Margin="0,9,0,0" />
+                                <CheckBox Content="Manage Store packages for all users"
+                                          IsChecked="{Binding Settings.StoreAllUsers, Mode=TwoWay}" Margin="0,9,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{DynamicResource Card}" Margin="0,0,0,12">
+                            <StackPanel>
+                                <TextBlock Text="Storage locations" Style="{DynamicResource CaptionText}" Margin="0,0,0,10" />
+                                <TextBlock Text="Backup folder" Style="{DynamicResource MutedText}" />
+                                <Grid Margin="0,5,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="BackupRootBox" Text="{Binding Settings.BackupRoot, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Button Grid.Column="1" Content="Browse" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="BrowseBackupFolder_Click" />
+                                </Grid>
+                                <TextBlock Text="Log folder" Style="{DynamicResource MutedText}" />
+                                <Grid Margin="0,5,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="LogRootBox" Text="{Binding Settings.LogRoot, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Button Grid.Column="1" Content="Browse" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="BrowseLogFolder_Click" />
+                                </Grid>
+                                <TextBlock Text="Portable scan roots (one folder per line)" Style="{DynamicResource MutedText}" />
+                                <TextBox x:Name="PortableRootsBox"
+                                         Text="{Binding PortableRootsText, UpdateSourceTrigger=PropertyChanged}"
+                                         Height="110"
+                                         Margin="0,5,0,0"
+                                         AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Auto"
+                                         TextWrapping="NoWrap" />
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <Button Content="Save settings" Style="{DynamicResource PrimaryButton}" Click="SaveSettings_Click" />
+                            <Button Content="Open log folder" Style="{DynamicResource SmallButton}" Margin="10,0,0,0" Click="OpenLogFolder_Click" />
+                            <Button Content="Open backup folder" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="OpenBackupFolder_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="2"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="16,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding StatusText}" Style="{DynamicResource MutedText}" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding AppsSummary}" Style="{DynamicResource MutedText}" VerticalAlignment="Center" />
+                    <ProgressBar Width="160" Margin="14,0,0,0" VerticalAlignment="Center" Value="{Binding ProgressValue}" Maximum="100" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

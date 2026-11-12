@@ -1,0 +1,87 @@
+<Window x:Class="DG.Uninstaller.LeftoverWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Review leftovers"
+        Width="1060"
+        Height="720"
+        MinWidth="860"
+        MinHeight="560"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Icon="pack://application:,,,/Assets/DG-Uninstaller.ico">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Review leftovers" Style="{DynamicResource TitleText}" />
+                <TextBlock x:Name="SubtitleText" Style="{DynamicResource MutedText}" Margin="0,4,0,0" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="Select recommended" Style="{DynamicResource SmallButton}" Click="SelectRecommended_Click" />
+                <Button Content="Select all" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="SelectAll_Click" />
+                <Button Content="Clear" Style="{DynamicResource SmallButton}" Margin="8,0,0,0" Click="Clear_Click" />
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Style="{DynamicResource Card}" Padding="10" Margin="0,0,0,12">
+            <TextBlock x:Name="SummaryText" Style="{DynamicResource MutedText}" />
+        </Border>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Items}" SelectionMode="Single" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="38" Header="">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      HorizontalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding TypeText}" Width="115" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="210" />
+                <DataGridTextColumn Header="Risk" Binding="{Binding RiskText}" Width="80" />
+                <DataGridTextColumn Header="Size" Binding="{Binding SizeText}" Width="85" />
+                <DataGridTextColumn Header="Details" Binding="{Binding Details}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="3" Style="{DynamicResource Card}" Padding="12" Margin="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <CheckBox x:Name="BackupCheckBox"
+                              Content="Back up selected items before cleaning"
+                              IsChecked="{Binding BackupEnabled, Mode=TwoWay}" />
+                    <TextBlock x:Name="BackupHintText" Style="{DynamicResource MutedText}" Margin="24,5,0,0" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="CancelButton" Content="Cancel" Style="{DynamicResource GhostButton}" Click="Cancel_Click" />
+                    <Button x:Name="CleanButton" Content="Clean selected" Style="{DynamicResource PrimaryButton}" Margin="10,0,0,0" Click="Clean_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="4" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ProgressBar x:Name="Progress" Minimum="0" Maximum="100" Value="0" VerticalAlignment="Center" />
+            <TextBlock x:Name="StatusTextBlock" Grid.Column="1" Style="{DynamicResource MutedText}" Margin="12,0,0,0" VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+</Window>
