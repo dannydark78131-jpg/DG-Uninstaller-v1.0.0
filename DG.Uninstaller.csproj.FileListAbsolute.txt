@@ -1,0 +1,13 @@
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\LeftoverWindow.baml
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\MainWindow.baml
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\Themes\Dark.baml
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\App.baml
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\LeftoverWindow.g.cs
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\MainWindow.g.cs
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\App.g.cs
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\DG.Uninstaller_MarkupCompile.cache
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\DG.Uninstaller.g.resources
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\DG.Uninstaller.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\DG.Uninstaller.AssemblyInfoInputs.cache
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\DG.Uninstaller.AssemblyInfo.cs
+C:\Users\DG\Documents\1\DG-Uninstaller-v1.0.0\DG.Uninstaller\obj\Release\net8.0-windows\win-x64\DG.Uninstaller.csproj.CoreCompileInputs.cache
